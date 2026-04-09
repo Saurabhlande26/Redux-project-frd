@@ -1,9 +1,18 @@
-import { useSelector } from "react-redux";
 import LoginPage from "./pages/LoginPage";
-import DashboardPage from "./pages/DashboardPage";
+import { useState } from "react";
+import Register from "./pages/register";
 
 export default function App() {
-  const token = useSelector((state: any) => state.auth.token);
-  console.log({ token })
-  return token ? <DashboardPage /> : <LoginPage />;
+  const [isLogin, setIsLogin] = useState(true);
+
+  
+  return (
+    <div>
+      {isLogin ? <LoginPage /> : <Register />}
+
+      <button onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? "Go to Register" : "Go to Login"}
+      </button>
+    </div>
+  );
 }

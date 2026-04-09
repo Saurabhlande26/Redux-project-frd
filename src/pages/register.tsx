@@ -1,22 +1,25 @@
 import { useState } from "react";
-import { loginUser } from "../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { registerUser } from "../features/auth/authSlice";
 
-export default function LoginPage() {
+export default function Register() {
     const dispatch = useAppDispatch();
-    const { loading, error } = useAppSelector((state: any) => state.auth);
+    const { loading, error } = useAppSelector((state) => state.auth);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = () => {
-        dispatch(loginUser({ email, password }));
-        
+    const handleRegister = async () => {
+        const res = await dispatch(registerUser({ email, password }));
+        // 👉 Optional: redirect after success
+        if (res.meta.requestStatus === "fulfilled") {
+            alert("Registered successfully. Please login.");
+        }
     };
 
     return (
         <div>
-            <h2>Login</h2>
+            <h2>Register</h2>
 
             <input
                 placeholder="Email"
@@ -31,8 +34,8 @@ export default function LoginPage() {
                 onChange={(e) => setPassword(e.target.value)}
             />
 
-            <button onClick={handleLogin}>
-                {loading ? "Logging in..." : "Login"}
+            <button onClick={handleRegister}>
+                {loading ? "Registering..." : "Register"}
             </button>
 
             {error && <p style={{ color: "red" }}>{error}</p>}
