@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { loginAPI } from "./authAPI";
 import api from "../../services/api";
 
 interface AuthState {
@@ -7,11 +6,13 @@ interface AuthState {
   refreshToken: string | null;
   loading: boolean;
   error: string | null;
+  user: object;
 }
 
 const initialState: AuthState = {
   accessToken: localStorage.getItem("accessToken"),
   refreshToken: localStorage.getItem("refreshToken"),
+  user: {},
   loading: false,
   error: null
 };
@@ -33,9 +34,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data: { email: string; password: string }, thunkAPI) => {
     try {
-      console.log({ api })
       const res = await api.post("/register", data);
-      console.log({ res })
       return res.data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(
@@ -52,9 +51,12 @@ const authSlice = createSlice({
     logout: (state) => {
       state.accessToken = null;
       state.refreshToken = null;
-
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+    },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload;
+      localStorage.setItem("accessToken", action.payload);
     }
   },
   extraReducers: (builder) => {
@@ -68,7 +70,7 @@ const authSlice = createSlice({
 
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
-
+        state.user = action.payload?.user;
         localStorage.setItem("accessToken", action.payload.accessToken);
         localStorage.setItem("refreshToken", action.payload.refreshToken);
       })
@@ -91,7 +93,5 @@ const authSlice = createSlice({
   }
 });
 
-
-
-export const { logout } = authSlice.actions;
+export const { logout, setAccessToken } = authSlice.actions;
 export default authSlice.reducer;

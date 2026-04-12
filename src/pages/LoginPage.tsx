@@ -1,36 +1,37 @@
 import { useState } from "react";
 import { loginUser } from "../features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { useNavigate } from "react-router-dom";
 
-export default function LoginPage() {
+const LoginPage = () => {
     const dispatch = useAppDispatch();
-    const { loading, error } = useAppSelector((state: any) => state.auth);
-
+    const { loading, error, user } = useAppSelector((state: any) => state.auth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate();
 
-    const handleLogin = () => {
-        dispatch(loginUser({ email, password }));
-        
+    const handleLogin = async () => {
+        const res = await dispatch(loginUser({ email, password }));
+        if (res?.meta?.requestStatus == "fulfilled") {
+            navigate("/dashboard")
+        }
+        console.log({ res })
     };
 
     return (
         <div>
             <h2>Login</h2>
-
             <input
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
             />
-
             <input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
-
             <button onClick={handleLogin}>
                 {loading ? "Logging in..." : "Login"}
             </button>
@@ -39,3 +40,5 @@ export default function LoginPage() {
         </div>
     );
 }
+
+export default LoginPage;
