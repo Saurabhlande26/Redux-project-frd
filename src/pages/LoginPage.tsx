@@ -5,17 +5,17 @@ import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
     const dispatch = useAppDispatch();
-    const { loading, error, user } = useAppSelector((state: any) => state.auth);
+    const { loading, error } = useAppSelector((state: any) => state.auth);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
+    const handleLogin = async (e) => {
+        // e.preventDeafult();
         const res = await dispatch(loginUser({ email, password }));
         if (res?.meta?.requestStatus == "fulfilled") {
             navigate("/dashboard")
         }
-        console.log({ res })
     };
 
     return (

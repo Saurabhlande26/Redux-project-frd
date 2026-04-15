@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "./hooks/reduxHooks";
 import { useEffect } from "react";
 import axios from "axios";
 import { logout, setAccessToken } from "./features/auth/authSlice";
+import AddTodo from "./pages/addTodo";
 
 export default function App() {
 
@@ -22,6 +23,14 @@ export default function App() {
       element: (
         <ProtectedRoute>
           <DashboardPage />
+        </ProtectedRoute>
+      )
+    },
+    {
+      path: "/addtodo",
+      element: (
+        <ProtectedRoute>
+          <AddTodo />
         </ProtectedRoute>
       )
     }
